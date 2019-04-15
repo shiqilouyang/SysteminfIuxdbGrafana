@@ -1,0 +1,18 @@
+{
+  "spark-sql": [
+    {
+      "type": "DRAM",
+      "datasize" : 1024,
+      "offHeap-enabled" : true,
+      "offHeapSize" : 490,
+      "times": 2
+    },
+    {
+      "type": "DRAM",
+      "datasize" : 1024,
+      "offHeap-enabled" : true,
+      "offHeapSize" : 490,
+      "times": 3
+    }
+  ]
+}
