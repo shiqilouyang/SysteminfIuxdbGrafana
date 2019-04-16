@@ -35,7 +35,7 @@ class GetMessage(InfluxdbOperation):
         self.database_operation.database_forwards()
         self.database_Policy.database_forwards()
         while True:
-            time.sleep(1)
+            time.sleep(5)
             self.num += 1
             (data, self.list, self.queque) = self.q.run(psutil.cpu_percent(0))
             record_parse_result(self.measurement_cpu, self.num, data)
