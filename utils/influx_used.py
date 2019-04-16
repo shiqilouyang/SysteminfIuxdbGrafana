@@ -14,7 +14,7 @@ class InfluxdbOperation(object):
             username=self.setting.get_ini("username"),
             password=self.setting.get_ini('password'),
         )
-        self.dbname = self.settings.get_ini('influx_database')
+        self.dbname = self.setting.get_ini('influx_database')
 
     def state_forwards(self, app_label, state):
         pass
