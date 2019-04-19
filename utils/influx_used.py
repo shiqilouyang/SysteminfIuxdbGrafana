@@ -5,7 +5,7 @@ from conf import ConfManagement
 
 
 @add_metaclass(ABCMeta)
-class InfluxdbOperation(object):
+class InfluxdbOperation():
     def __init__(self):
         self.setting =ConfManagement("influxDB")
         self.client = InfluxDBClient(
