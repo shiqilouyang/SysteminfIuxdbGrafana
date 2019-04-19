@@ -4,25 +4,23 @@ from six import add_metaclass
 import psutil
 from utils import record_parse_result
 from utils.multipo_queque import Multipo_Queque
-from utils.influx_used import CreateInfluxdbDatabase, CreateInfluxdbRetentionPolicy
-
+from utils.influx_used import CreateInfluxdbDatabase,CreateInfluxdbRetentionPolicy
 
 @add_metaclass(ABCMeta)
 class InfluxdbOperation(object):
     def __init__(self):
         self.q = Multipo_Queque()
-        self.ps = psutil.virtual_memory()
+        #self.ps = psutil.virtual_memory()
         self.queque = None
         self.list = list()
         self.measurement_cpu = "cpu"
         self.measurement_memory = "memory"
         self.measurement_io_read = "io_read"
         self.measurement_io_write = "io_write"
-        self.measurement_io_wait = "io_wait"
-
+        self.measurement_io_wait = "io_wait"       
+ 
     def get_message(self, app_label, state):
         pass
-
 
 class GetMessage(InfluxdbOperation):
     def __init__(self):
@@ -39,23 +37,22 @@ class GetMessage(InfluxdbOperation):
             read = psutil.disk_io_counters().read_bytes
             write = psutil.disk_io_counters().write_bytes
             time.sleep(1)
-            io_read = psutil.disk_io_counters().read_bytes - read
-            io_write = psutil.disk_io_counters().write_bytes - write
+            io_read=psutil.disk_io_counters().read_bytes -read
+            io_write=psutil.disk_io_counters().write_bytes -write
             self.num += 1
-            (data, self.list, self.queque) = self.q.run(
-                '%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
+            (data, self.list, self.queque) = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
             record_parse_result(self.measurement_cpu, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f'%(self.ps.used/1024/1024/1024))
+            (data, self.list, self.queque) = self.q.run('%.2f'%(psutil.virtual_memory().used/1024/1024/1024))
             record_parse_result(self.measurement_memory, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f' % (io_read / 1024))
+            (data, self.list, self.queque) = self.q.run('%.2f'%(io_read/1024))
             record_parse_result(self.measurement_io_read, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f' % (io_write / 1024))
+            (data, self.list, self.queque) = self.q.run('%.2f'%(io_write/1024))
             record_parse_result(self.measurement_io_write, self.num, data)
             (data, self.list, self.queque) = self.q.run(
-                '%.2f' %(psutil.cpu_times_percent(interval=None, percpu=False).iowait))
+                '%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).iowait)
+            )
             record_parse_result(self.measurement_io_wait, self.num, data)
-
 
 if __name__ == '__main__':
     c = GetMessage()
-    c.gen_message()
+    print(c.gen_message())
