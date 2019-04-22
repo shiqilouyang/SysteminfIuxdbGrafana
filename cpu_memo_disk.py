@@ -36,7 +36,6 @@ class GetMessage(InfluxdbOperation):
         self.database_operation.database_forwards()
         self.database_Policy.database_forwards()
         while True:
-            time.sleep(1)
             # p1 = psutil.disk_io_counters()
             # p1_read_pre = p1.read_bytes/1024/1024
             # p1_write_end = p1.write_bytes/1024/1024
@@ -56,7 +55,7 @@ class GetMessage(InfluxdbOperation):
             # else:
             #     io_write = (p2_write_end-p1_write_end)/(p2_write_time-p1_write_time)
 
-            os.run_linux("iostat -d 1 1 > io_message.log")
+            os.run_linux("iostat -d 1 5 > io_message.log", asyn=False)
             io_read, io_write = get_w_r()
             self.num += 1
             (data, self.list, self.queque) = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
