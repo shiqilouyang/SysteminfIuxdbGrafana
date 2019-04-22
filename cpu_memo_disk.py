@@ -2,6 +2,8 @@ import time
 from abc import ABCMeta
 from six import add_metaclass
 import psutil
+from get_io import get_w_r
+from utils.safe_linux import OSUtil as os
 from utils import record_parse_result
 from utils.multipo_queque import Multipo_Queque
 from utils.influx_used import CreateInfluxdbDatabase,CreateInfluxdbRetentionPolicy
@@ -35,32 +37,35 @@ class GetMessage(InfluxdbOperation):
         self.database_Policy.database_forwards()
         while True:
             time.sleep(1)
-            p1 = psutil.disk_io_counters()
-            p1_read_pre = p1.read_bytes/1024/1024
-            p1_write_end = p1.write_bytes/1024/1024
-            p1_read_time = p1.read_time/1000
-            p1_write_time = p1.write_time/1000
-            p2 = psutil.disk_io_counters()
-            p2_read_pre = p2.read_bytes/1024/1024
-            p2_write_end = p2.write_bytes/1024/1024
-            p2_read_time = p2.read_time/1000
-            p2_write_time = p2.write_time
-            if p2_read_time - p1_read_time == 0:
-                io_read = 0
-            else:
-                io_read = (p2_read_pre-p1_read_pre)/(p2_read_time-p1_read_time)
-            if p2_write_time-p1_write_time ==0:
-                io_write=0
-            else:
-                io_write = (p2_write_end-p1_write_end)/(p2_write_time-p1_write_time)
+            # p1 = psutil.disk_io_counters()
+            # p1_read_pre = p1.read_bytes/1024/1024
+            # p1_write_end = p1.write_bytes/1024/1024
+            # p1_read_time = p1.read_time/1000
+            # p1_write_time = p1.write_time/1000
+            # p2 = psutil.disk_io_counters()
+            # p2_read_pre = p2.read_bytes/1024/1024
+            # p2_write_end = p2.write_bytes/1024/1024
+            # p2_read_time = p2.read_time/1000
+            # p2_write_time = p2.write_time
+            # if p2_read_time - p1_read_time == 0:
+            #     io_read = 0
+            # else:
+            #     io_read = (p2_read_pre-p1_read_pre)/(p2_read_time-p1_read_time)
+            # if p2_write_time-p1_write_time ==0:
+            #     io_write=0
+            # else:
+            #     io_write = (p2_write_end-p1_write_end)/(p2_write_time-p1_write_time)
+
+            os.run_linux("iostat -d 1 1 > io_message.log")
+            io_read, io_write = get_w_r()
             self.num += 1
             (data, self.list, self.queque) = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
             record_parse_result(self.measurement_cpu, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f'%(psutil.virtual_memory().used/1024/1024/1024))
+            (data, self.list, self.queque) = self.q.run('%.2f'% (psutil.virtual_memory().used/1024/1024/1024))
             record_parse_result(self.measurement_memory, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f'%(io_read))
+            (data, self.list, self.queque) = self.q.run(io_read)
             record_parse_result(self.measurement_io_read, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f'%(io_write))
+            (data, self.list, self.queque) = self.q.run(io_write)
             record_parse_result(self.measurement_io_write, self.num, data)
             (data, self.list, self.queque) = self.q.run(
                 '%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).iowait)
