@@ -2,8 +2,12 @@ import os, subprocess, tempfile, time
 
 class OSUtil(object):
     @staticmethod
-    def run_linux(dos):
-        subprocess.Popen(dos, shell=True)
+    def run_linux(dos, asyn=True):
+        if asyn:
+            subprocess.Popen(dos, shell=True)
+        else:
+            rc = subprocess.Popen(dos, shell=True)
+            rc.wait()
 
     @staticmethod
     def safe_popen(cmd, timeout=0, interval=10, **params):
