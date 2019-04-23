@@ -1,7 +1,9 @@
 # SysteminfIuxdbGrafana
-# load image(you can get from sr585:/mnt/DP_disk1)
+    load image
+ ++++++++++++++++++++++
     docker load -i influxdb.tar
-# add repository 
+ add repository 
+ +++++++++++++++++++++++
     docker tag <IMAGE ID> influxdb
 
     docker load -i grafana.tar
