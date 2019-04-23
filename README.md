@@ -34,5 +34,5 @@
    * To write sql and change Collection time in the upper right corner
 
 # node
-   # The time displayed on the dashboard is not synchronized
+   ## The time displayed on the dashboard is not synchronized
        The time zone of the influxdb data is the time zone of the docker container. The default is utc. Unless you specify it with -v /etc/localtime:/etc/localtime , you should specify the same time zone as the docker container in the dashboard.       
