@@ -18,16 +18,15 @@ class SetLog():
         file_log_handler.setFormatter(formatter)
         logging.getLogger().addHandler(file_log_handler)
 
-    def __getattr__(self, item):
+    def __getattr__(self, e):
         self.setup_log()
-        data = {
+        log_match = {
             "info": logging.info,
             "debug": logging.debug,
             "error": logging.error
         }
-        for k, v in data.items():
-            if item in k:
-                return v
+        if e in log_match.keys():
+            return log_match.get(e)
 
 # try:
 #     3/0
