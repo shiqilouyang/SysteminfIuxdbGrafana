@@ -1,9 +1,8 @@
 # SysteminfIuxdbGrafana
-    load image
- ++++++++++++++++++++++
+## run docker
+   ### load image
     docker load -i influxdb.tar
- add repository 
- +++++++++++++++++++++++
+   ### add repository 
     docker tag <IMAGE ID> influxdb
 
     docker load -i grafana.tar
@@ -22,15 +21,15 @@
     // Sign out container
     curl +P+Q
 
-# with open link http:ip:3000 and then
+## with open link http:ip:3000 and then
     create datasourse
-    1, use influxdb datasourse
-    2, Assign url adress(not localhost) and influxdb port
-    3, database is sxu, user and password not need to fill in
-    4, save and test
+    * use influxdb datasourse
+    * Assign url adress(not localhost) and influxdb port
+    * database is sxu, user and password not need to fill in
+    * save and test
 
-# new dashboard
-    1,Choose Visualization and use Graph
-    2,you can Y-max and Y-min in Visualization and title use Genneral
-    3,In Queries, change Queries to datasourse what the create influxdb datasourse
-    4,To write sql and change Collection time in the upper right corner
+## new dashboard
+    * Choose Visualization and use Graph
+    * you can Y-max and Y-min in Visualization and title use Genneral
+    * In Queries, change Queries to datasourse what the create influxdb datasourse
+    * To write sql and change Collection time in the upper right corner
