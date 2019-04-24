@@ -8,13 +8,14 @@ from utils import record_parse_result
 from utils.multipo_queque import Multipo_Queque
 from utils.influx_used import CreateInfluxdbDatabase,CreateInfluxdbRetentionPolicy
 
+
 @add_metaclass(ABCMeta)
 class InfluxdbOperation(object):
     def __init__(self):
         self.q = Multipo_Queque()
         #self.ps = psutil.virtual_memory()
         self.queque = None
-        self.list = list()
+        #self.list = list()
         self.measurement_cpu = "cpu"
         self.measurement_memory = "memory"
         self.measurement_io_read = "io_read"
@@ -23,6 +24,7 @@ class InfluxdbOperation(object):
  
     def get_message(self, app_label, state):
         pass
+
 
 class GetMessage(InfluxdbOperation):
     def __init__(self):
@@ -58,19 +60,20 @@ class GetMessage(InfluxdbOperation):
             os.run_linux("iostat -d 1 5 > io_message.log", asyn=False)
             io_read, io_write = get_w_r()
             self.num += 1
-            (data, self.list, self.queque) = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
+            data, NULL, NULL = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
             record_parse_result(self.measurement_cpu, self.num, data)
-            (data, self.list, self.queque) = self.q.run('%.2f'% (psutil.virtual_memory().used/1024/1024/1024))
+            data, NULL, NULL = self.q.run('%.2f'% (psutil.virtual_memory().used/1024/1024/1024))
             record_parse_result(self.measurement_memory, self.num, data)
-            (data, self.list, self.queque) = self.q.run(io_read)
+            data, NULL, NULL = self.q.run(io_read)
             record_parse_result(self.measurement_io_read, self.num, data)
-            (data, self.list, self.queque) = self.q.run(io_write)
+            data, NULL, NULL = self.q.run(io_write)
             record_parse_result(self.measurement_io_write, self.num, data)
-            (data, self.list, self.queque) = self.q.run(
+            data, NULL, NULL = self.q.run(
                 '%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).iowait)
             )
             record_parse_result(self.measurement_io_wait, self.num, data)
 
+
 if __name__ == '__main__':
     c = GetMessage()
-    print(c.gen_message())
+    c.gen_message()
