@@ -30,13 +30,13 @@ class GetMessage(InfluxdbOperation):
     def __init__(self):
         super().__init__()
         self.database_operation = CreateInfluxdbDatabase()
-        self.database_Policy = CreateInfluxdbRetentionPolicy(
-            "2h-default", "2h", 1, True)
+        # self.database_Policy = CreateInfluxdbRetentionPolicy(
+        #     "2h-default", "2h", 1, True)
         self.num = 0
 
     def gen_message(self):
         self.database_operation.database_forwards()
-        self.database_Policy.database_forwards()
+        # self.database_Policy.database_forwards()
         while True:
             # p1 = psutil.disk_io_counters()
             # p1_read_pre = p1.read_bytes/1024/1024
