@@ -17,6 +17,4 @@ def get_w_r():
     return '%.2f'%(sum(list_r)/5), '%.2f'%(sum(list_w)/5)
 
 
-print(get_w_r())
 
-#
