@@ -2,7 +2,7 @@ import time
 from abc import ABCMeta
 from six import add_metaclass
 import psutil
-from get_io import get_w_r
+from get_io import get_w_r, get_AEP_Use
 from utils.safe_linux import OSUtil as os
 from utils import record_parse_result
 from utils.multipo_queque import Multipo_Queque
@@ -20,7 +20,8 @@ class InfluxdbOperation(object):
         self.measurement_memory = "memory"
         self.measurement_io_read = "io_read"
         self.measurement_io_write = "io_write"
-        self.measurement_io_wait = "io_wait"       
+        self.measurement_io_wait = "io_wait"
+        self.measurement_aep_use = "aep_used"
  
     def get_message(self, app_label, state):
         pass
@@ -58,6 +59,7 @@ class GetMessage(InfluxdbOperation):
             #     io_write = (p2_write_end-p1_write_end)/(p2_write_time-p1_write_time)
 
             os.run_linux("iostat -d 1 5 > io_message.log", asyn=False)
+            os.run_linux("df -h > get_io.log", asyn=False)
             io_read, io_write = get_w_r()
             self.num += 1
             data, NULL, NULL = self.q.run('%.2f' % (psutil.cpu_times_percent(interval=None, percpu=False).user))
@@ -73,6 +75,8 @@ class GetMessage(InfluxdbOperation):
             )
             record_parse_result(self.measurement_io_wait, self.num, data)
 
+            data, NULL, NULL = self.q.run(get_AEP_Use())
+            record_parse_result(self.measurement_aep_use, self.num, data)
 
 if __name__ == '__main__':
     c = GetMessage()

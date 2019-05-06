@@ -6,6 +6,7 @@ def bylineread(fimename):
             yield line
             line = f.readline()
 
+
 def get_w_r():
     list_w = []
     list_r = []
@@ -18,3 +19,11 @@ def get_w_r():
 
 
 
+def get_AEP_Use():
+    use_aep = []
+    for i in bylineread('df-h.log'):
+        if i.startswith("/dev/pmem"):
+            use_aep.append(str(int(re.findall(' \d+', i)[1].strip())/1024) + "G") \
+                if "M" in i \
+                else use_aep.append(re.findall(' \d+', i)[1].strip() + "G")
+    return float(use_aep[0][:-1]) + float(use_aep[1][:-1])
