@@ -8,8 +8,7 @@ def bylineread(fimename):
 
 
 def get_w_r():
-    list_w = []
-    list_r = []
+    list_r = list_w = []
     for i in bylineread('io_message.log'):
         list_w_r = re.findall(' \d+\.\d+ ', i)[1:]
         if len(list_w_r) != 0:
