@@ -1,6 +1,7 @@
 from influxdb import InfluxDBClient
 from conf import ConfManagement
 
+
 def __build_influxdb_json(id, measurement, value):
     model_json = [
         {
@@ -14,6 +15,7 @@ def __build_influxdb_json(id, measurement, value):
         }
     ]
     return model_json
+
 
 def record_parse_result(measurement,job_id,result):
     if not result:
