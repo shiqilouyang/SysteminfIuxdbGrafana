@@ -12,7 +12,12 @@ class ConfManagement(object):
         self.conf.read(self.inipath)
 
     def get_ini(self, value):
-        return self.conf.get(self.section, value)
+        try:
+            return self.conf.get(self.section, value)
+        except Exception as e:
+            from logs import SetLog
+            SetLog().error("it is not find %s from conf.int"%value)
+            raise e
 
     def set_ini(self, session, value):
         self.conf.set(self.section, session, value)
