@@ -1,10 +1,18 @@
 import re
+
+from logs import SetLog
+
+
 def bylineread(fimename):
-    with open(fimename, 'r',encoding="utf-8") as f:
-        line = f.readline()
-        while line:
-            yield line
+    try:
+        with open(fimename, 'r',encoding="utf-8") as f:
             line = f.readline()
+            while line:
+                yield line
+                line = f.readline()
+    except FileNotFoundError as e:
+        SetLog().error("File %s read failed not found "%fimename)
+        raise e
 
 
 def get_w_r():
