@@ -2,6 +2,7 @@ import configparser
 import os
 import json
 
+
 class ConfManagement(object):
     def __init__(self,default="spark-sql"):
         self.section =default
