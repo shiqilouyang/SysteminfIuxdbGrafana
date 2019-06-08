@@ -10,9 +10,9 @@
     docker load -i system-information.tar
     docker tag <IMAGE ID> system-information
 
-    docker run -d -p 8086:8086 -v /etc/localtime:/etc/localtime --name influx influxdb
-    docker run -d -p 3000:3000 -v /etc/localtime:/etc/localtime --link influx:influx --name grafana grafana
-    docker run --net=host -ti -v /etc/localtime:/etc/localtime system-information /bin/bash
+    docker run -d -p 8086:8086  --name influx influxdb
+    docker run -d -p 3000:3000  --link influx:influx --name grafana grafana
+    docker run --net=host -ti  system-information /bin/bash
 
 
     // you are now in docker container and should "cd /home/inter-test "
