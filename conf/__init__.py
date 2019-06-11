@@ -27,8 +27,3 @@ class ConfManagement(object):
     def get_json(self):
         with open(self.json_path, 'r') as f:
             return json.load(f)
-
-
-# from conf import ConfManagement
-# ConfManagement("kmeans").get("viewphone")
-# ConfManagement().set(session="appPackage",value="B")
